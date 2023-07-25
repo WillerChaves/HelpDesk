@@ -1,4 +1,31 @@
-import audioop
+""" art Vanishing Point
+
+88888888888888888888888888888888888888888888888888888888888888888888888
+88.._|      | `-.  | `.  -_-_ _-_  _-  _- -_ -  .'|   |.'|     |  _..88
+88   `-.._  |    |`!  |`.  -_ -__ -_ _- _-_-  .'  |.;'   |   _.!-'|  88
+88      | `-!._  |  `;!  ;. _______________ ,'| .-' |   _!.i'     |  88
+88..__  |     |`-!._ | `.| |_______________||."'|  _!.;'   |     _|..88
+88   |``"..__ |    |`";.| i|_|MMMMMMMMMMM|_|'| _!-|   |   _|..-|'    88
+88   |      |``--..|_ | `;!|l|MMoMMMMoMMM|1|.'j   |_..!-'|     |     88
+88   |      |    |   |`-,!_|_|MMMMP'YMMMM|_||.!-;'  |    |     |     88
+88___|______|____!.,.!,.!,!|d|MMMo * loMM|p|,!,.!.,.!..__|_____|_____88
+88      |     |    |  |  | |_|MMMMb,dMMMM|_|| |   |   |    |      |  88
+88      |     |    |..!-;'i|r|MPYMoMMMMoM|r| |`-..|   |    |      |  88
+88      |    _!.-j'  | _!,"|_|M<>MMMMoMMM|_||!._|  `i-!.._ |      |  88
+88     _!.-'|    | _."|  !;|1|MbdMMoMMMMM|l|`.| `-._|    |``-.._  |  88
+88..-i'     |  _.''|  !-| !|_|MMMoMMMMoMM|_|.|`-. | ``._ |     |``"..88
+88   |      |.|    |.|  !| |u|MoMMMMoMMMM|n||`. |`!   | `".    |     88
+88   |  _.-'  |  .'  |.' |/|_|MMMMoMMMMoM|_|! |`!  `,.|    |-._|     88
+88  _!"'|     !.'|  .'| .'|[@]MMMMMMMMMMM[@] \|  `. | `._  |   `-._  88
+88-'    |   .'   |.|  |/| /                 \|`.  |`!    |.|      |`-88
+88      |_.'|   .' | .' |/                   \  \ |  `.  | `._-Lee|  88
+88     .'   | .'   |/|  /                     \ |`!   |`.|    `.  |  88
+88  _.'     !'|   .' | /                       \|  `  |  `.    |`.|  88
+88 vanishing point 888888888888888888888888888888888888888888888(FL)888
+
+"""
+import os
+import shutil
 import tkinter
 import tkinter.messagebox
 import customtkinter
@@ -7,17 +34,18 @@ import winreg
 import socket
 import platform
 import getpass
-import subprocess
-import pyaudio
-from PIL import Image, ImageTk
 import tkinter as tk
+import subprocess
+import time
+import win32cred
+import re
+from PIL import Image, ImageTk
 from tkinter import ttk
 from tktooltip import ToolTip
-import subprocess
 from pywinauto import Application
-import time
 from tkinter import messagebox
-import win32cred
+
+
 ''
 customtkinter.set_appearance_mode("System") #Tema do sistema
 
@@ -44,33 +72,35 @@ class App(customtkinter.CTk):
 
         UP = self.bttn_UpdatePolicy = customtkinter.CTkButton(self.sidebar_frame, command=self.iniciar_atualizacao, text="Atualizar política")
         self.bttn_UpdatePolicy.grid(row=1, column=0, padx=20, pady=10)
-        ToolTip(UP, msg="Atualizar as políticas do computador.")
+        ToolTip(UP, msg="Atualizar as políticas do computador.", delay=0,
+        parent_kwargs={"padx": 5, "pady": 5}, padx=10, pady=10)
 
         CA = self.bttn_ClearA = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Limpar arquivos")
         self.bttn_ClearA.grid(row=2, column=0, padx=20, pady=10)
-        ToolTip(CA, msg="Limpeza de arquivos temporários")
+        ToolTip(CA, msg="Limpeza de arquivos temporários", delay=0,
+        parent_kwargs={"padx": 5, "pady": 5}, padx=10, pady=10)
         
         Slow = self.bttn_Slow = customtkinter.CTkButton(self.sidebar_frame, command=self.inicia_lentidao, text="Corrigir Lentidão")
         self.bttn_Slow.grid(row=3, column=0, padx=20, pady=10)
-        ToolTip(Slow, msg="Conjunto de soluções para diminuir a lentidão do computador")
+        ToolTip(Slow, msg="Conjunto de soluções para diminuir a lentidão do computador", delay=0,
+        parent_kwargs={"padx": 5, "pady": 5}, padx=10, pady=10)
+
         """        
         Onp = self.bttn_Odbcnp = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="")
         self.bttn_Odbcnp.grid(row=4, column=0, padx=20, pady=10)
         ToolTip(Onp, msg="Corrigir o erro de conexão com o banco de dados ODBC")
         """
-        Cfull = self.bttn_ClearFull = customtkinter.CTkButton(self.sidebar_frame, command=self.inicia_limpeza, text="Limpeza geral")
+        Cfull = self.bttn_ClearFull = customtkinter.CTkButton(self.sidebar_frame, command=self.inicia_limpeza, text="Limpar credenciais")
         self.bttn_ClearFull.grid(row=5, column=0, padx=20, pady=10)
-        ToolTip(Cfull, msg="Limpeza de cache, cookies e credenciais do windows")
+        ToolTip(Cfull, msg="Limpeza de credenciais do windows", delay=0,
+        parent_kwargs={"padx": 5, "pady": 5}, padx=10, pady=10)
         
-        bttn6 = self.sidebar_button_6 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="Internet")
-        self.sidebar_button_6.grid(row=6, column=0, padx=20, pady=10)
-        ToolTip(bttn6, msg="Desc")
-        
-        """
-        bttn7 = self.sidebar_button_7 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="botao 7")
+        bttn7 = self.sidebar_button_7 = customtkinter.CTkButton(self.sidebar_frame, command=self.config_proxy, text="Configurar proxy")
         self.sidebar_button_7.grid(row=7, column=0, padx=20, pady=10)
-        ToolTip(bttn7, msg="Desc")
+        ToolTip(bttn7, msg="Configurar o proxy com base em sua liberação", delay=0,
+        parent_kwargs={"padx": 5, "pady": 5}, padx=10, pady=10)
 
+        """"
         bttn8 = self.sidebar_button_8 = customtkinter.CTkButton(self.sidebar_frame, command=self.sidebar_button_event, text="botao 8")
         self.sidebar_button_8.grid(row=8, column=0, padx=20, pady=10)
         ToolTip(bttn8, msg="Desc")
@@ -79,16 +109,12 @@ class App(customtkinter.CTk):
         self.sidebar_button_9.grid(row=9, column=0, padx=20, pady=10)
         ToolTip(bttn9, msg="Desc")
         """
-        faq = self.bttn_faq = customtkinter.CTkButton(self.sidebar_frame, command=self.open_faq_window, text="FAQ")
-        self.bttn_faq.grid(row=10, column=0, padx=20, pady=10)
-        ToolTip(faq, msg="Desc")
-
         # create textbox exception
         self.exception = customtkinter.CTkTextbox(self, width=250)
         self.exception.grid(row=0, column=1, padx=(30, 0), pady=(30, 0), sticky="nsew")
 
         # create textbox informations
-        self.inform = customtkinter.CTkTextbox(self, width=250)
+        self.inform = customtkinter.CTkTextbox(self, width=250, height=260)
         self.inform.grid(row=1, column=1, padx=(30, 0), pady=(30,0), sticky="nsew")
 
         # create frame version
@@ -98,7 +124,7 @@ class App(customtkinter.CTk):
         self.v_frame.grid_columnconfigure(10, weight=1)
 
         # create version info
-        self.version = customtkinter.CTkLabel(self.v_frame, text="Beta_1.0", font=customtkinter.CTkFont(size=10, weight="bold"))
+        self.version = customtkinter.CTkLabel(self.v_frame, text="Alfa_1.0", font=customtkinter.CTkFont(size=10, weight="bold"))
         self.version.grid(row=2, column=4, padx=(10, 0), pady=(10,0), sticky="nsew")
 
 
@@ -106,8 +132,11 @@ class App(customtkinter.CTk):
             # set textbox exception
         reg = winreg.ConnectRegistry(None, winreg.HKEY_CURRENT_USER)
         key = winreg.OpenKey(reg, r"Software\Microsoft\Windows\CurrentVersion\Internet Settings")
-        vreg, regtype = winreg.QueryValueEx(key, "proxyoverride")
-        
+        try:
+            vreg, regtype = winreg.QueryValueEx(key, "proxyoverride")
+        except FileNotFoundError:
+            vreg = "Configurações de proxy não encontrado."
+            
         self.exception.insert("0.0", "Exceções do proxy:\n\n" + vreg + "\n\n")
         
         # Obtenha o hostname
@@ -128,14 +157,16 @@ class App(customtkinter.CTk):
         else:
             os = platform.system()
 
+        gpresult = subprocess.run(['gpresult', '/r'], capture_output=True, text=True)
+        gp = re.findall(r"\b(GG_[^\s]+|G_[^\s]+|gg_[^\s]+|g_[^\s]+|Group[^\s]+)\b", gpresult.stdout)
+
         # Insira as informações no objeto self.inform
         self.inform.insert("0.0", "Informações do computador/usuário\n\n" +
                                 f"Hostname: {hostname}\n\n" +
                                 f"Endereço IP: {ip_address}\n\n" +
-                                f"Sistema operacional: {os}\n\n")
-        
+                                f"Sistema operacional: {os}\n\n" +
+                                f"Grupos: {gp}")
 
-        gpresult = subprocess.run(['gpresult', '/r'], capture_output=True, text=True)
 
         if "g_net" in gpresult.stdout.lower():
             # create textbox info G-NET and Proxy
@@ -156,7 +187,7 @@ class App(customtkinter.CTk):
         print("sidebar_button click")
     
     #   Inicia ações dos botões
-    def iniciar_atualizacao(self):
+    def iniciar_atualizacao(self):            
         def gpupdate():
             # Exibir aviso informando que a política está sendo atualizada
             messagebox.showinfo("Atualização de Política", "A política está sendo atualizada.")
@@ -170,7 +201,7 @@ class App(customtkinter.CTk):
         # Criar um thread para executar a função de atualização
         thrdGPUP = threading.Thread(target=gpupdate)
         thrdGPUP.start()
-
+        
     def inicia_limpeza(self):
         
         # Exibir aviso informando que a política está sendo atualizada
@@ -178,39 +209,44 @@ class App(customtkinter.CTk):
         
         # Função para exclusão das credenciais do perfil
         def cWindows_credent():
-            creds = win32cred.CredEnumerate(None, 0)
+            try:
+                creds = win32cred.CredEnumerate(None, 0)
+                if creds:
+                    for cred in creds:
+                        target = cred['TargetName']
+                        type = cred['Type']
 
-            for cred in creds:
-                target = cred['TargetName']
-                type = cred['Type']
+                        # Verifica se é uma credencial do Windows
+                        if type == win32cred.CRED_TYPE_GENERIC or type == win32cred.CRED_TYPE_DOMAIN_PASSWORD:
+                            # Exclui a credencial
+                            win32cred.CredDelete(target, type, 0)
+                
+            except:
+                print("Não há credenciais para limpar.")
 
-                # Verifica se é uma credencial do Windows
-                if type == win32cred.CRED_TYPE_GENERIC or type == win32cred.CRED_TYPE_DOMAIN_PASSWORD:
-
-                    # Exclui a credencial
-                    win32cred.CredDelete(target, type, 0)
-
+        
         # Cria as threads para cada função de limpeza
-        thrdCredent = threading.Thread(target=cWindows_credent)
+        thrdCreden = threading.Thread(target=cWindows_credent)
+#        thrdChrome = threading.Thread(target=limpar_chrome)
+#        thrdEdge = threading.Thread(target=limpar_edge)
 
         # Inicia a thread
-        thrdCredent.start()
+        thrdCreden.start()
 
         # Aguarda a thread terminar
-        thrdCredent.join()
-
+        thrdCreden.join()
+        
         # Exibir aviso informando que a limpeza foi concluída
         messagebox.showinfo("Limpeza concluída", "Limpeza concluída.")
-        
-    
+
     def inicia_lentidao(self):
         def exec_dism():
             comando_scan = "dism /online /cleanup-image /scanhealth"
             comando_restore = "dism /online /cleanup-image /restorehealth"
+            messagebox.showinfo("Scan", "Varredura iniciada, por favor aguarde.")
 
             # Executar o comando de scan
             try:
-                messagebox.showinfo("Scan", "Varredura iniciada, por favor aguarde.")
                 subprocess.run(comando_scan, check=True, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
             except subprocess.CalledProcessError as e:
@@ -218,12 +254,11 @@ class App(customtkinter.CTk):
 
             # Executar o comando de restore
             try:
-                messagebox.showinfo("Restore", "Correção iniciada, por favor aguarde.")
                 subprocess.run(comando_restore, check=True, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 
             except subprocess.CalledProcessError as e:
                 messagebox.showerror("Erro", f"Ocorreu um erro ao executar o comando de scan: {e}")
-        
+                
         def energy_plan():
             # Executar o comando para adicionar o novo plano de energia
             comando_adicionar = 'powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61'
@@ -264,35 +299,36 @@ class App(customtkinter.CTk):
                 print(f"Ocorreu um erro ao listar os planos de energia: {e}")
 
         
-            
-        # Cria as threads para cada função de limpeza
-        thrdDism = threading.Thread(target=exec_dism)
+            # Cria a thread para a primeira função de limpeza
+            thrdEnergy = threading.Thread(target=energy_plan)
 
-        # Inicia a thread
-        thrdDism.start()
+            # Inicia a thread
+            thrdEnergy.start()
+
+            # Aguarda a conclusão da primeira tarefa
+            thrdEnergy.join()
+
+            # Cria a thread para a segunda função
+            thrdDism = threading.Thread(target=exec_dism)
+
+            # Inicia a segunda thread
+            thrdDism.start()
+
+            thrdDism.join()
+
+            messagebox.showinfo("Scan", "Varredura concluída.")
 
 
-    def open_faq_window(self):
+    def config_proxy(self):
+        print("teste")
+
+        gpresult = subprocess.run(['gpresult', '/r'], capture_output=True, text=True)
+
         
-        # Criação da nova janela
-        faq_window = tk.Toplevel()
-        faq_window.title("FAQ")
 
-        # Create window
-        faq_window.geometry(f"{1100}x{580}")
 
-        # Criando e posicionando os elementos na nova janela
-        label_question1 = tk.Label(faq_window, text="Q1: Qual é a pergunta 1?")
-        label_question1.pack()
-        
-        label_answer1 = tk.Label(faq_window, text="R: Esta é a resposta para a pergunta 1.")
-        label_answer1.pack()
-        
-        label_question2 = tk.Label(faq_window, text="Q2: Qual é a pergunta 2?")
-        label_question2.pack()
-        
-        label_answer2 = tk.Label(faq_window, text="R: Esta é a resposta para a pergunta 2.")
-        label_answer2.pack()
+
+
 
 if __name__== "__main__":
     app = App()
